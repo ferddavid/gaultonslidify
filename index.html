@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Test deck</title>
+  <title>Galton Child Height Predictor</title>
   <meta charset="utf-8">
-  <meta name="description" content="Test deck">
-  <meta name="author" content="">
+  <meta name="description" content="Galton Child Height Predictor">
+  <meta name="author" content="Ferdinand David">
   <meta name="generator" content="slidify" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -32,9 +32,9 @@
     <!-- LOGO SLIDE -->
         <slide class="title-slide segue nobackground">
   <hgroup class="auto-fadein">
-    <h1>Test deck</h1>
-    <h2></h2>
-    <p><br/></p>
+    <h1>Galton Child Height Predictor</h1>
+    <h2>Predicting Child Height Based on Parent Height</h2>
+    <p>Ferdinand David<br/></p>
   </hgroup>
   <article></article>  
 </slide>
@@ -43,14 +43,14 @@
     <!-- SLIDES -->
     <slide class="" id="slide-1" style="background:;">
   <hgroup>
-    <h2>Read-And-Delete</h2>
+    <h2>A Child Height Predictor?</h2>
   </hgroup>
   <article data-timings="">
-    <ol>
-<li>Edit YAML front matter</li>
-<li>Write using R Markdown</li>
-<li>Use an empty line followed by three dashes to separate slides!</li>
-</ol>
+    <ul>
+<li>Many parents want to know the gender of their child before birth.</li>
+<li>A natural extension...predict your child&#39;s height!</li>
+<li>Envision how tall your child will be.</li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
@@ -58,13 +58,59 @@
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Slide 2</h2>
+    <h2>The Model Basis</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="r">plot(1:10, 1:10)
-</code></pre>
+    <ul>
+<li>in 1885, Francis Galton studied the relationship of the heights of parents and their children.</li>
+<li>928 children heights were studied</li>
+<li>Data was built using the midparent height as the input</li>
+</ul>
 
-<p><img src="assets/fig/unnamed-chunk-1.png" alt="plot of chunk unnamed-chunk-1"> </p>
+<p>\[\frac{father height + (1.08 * mother height)} {2}\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Ease of Use</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Using the two sliders in the model makes for an easy calculation of the midparent height</p></li>
+<li><p>The ease of use will enable adoption</p></li>
+</ul>
+
+<p><img src="Capture.png" alt="width"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>ui.R code</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The product uses the follwing code below</li>
+</ul>
+
+<pre><code class="r">library(UsingR)
+data(galton)
+lmgalton &lt;- lm(galton$child~., data = galton)
+heightpredict &lt;- function(height,height2) 
+  predict(lmgalton, data.frame(parent=(height+(1.08*height2))/2), interval = &quot;predict&quot;)
+shinyServer(
+  function(input, output) {
+    output$inputValue &lt;- renderPrint({input$height})
+    output$inputValue2 &lt;- renderPrint({input$height2})
+    output$prediction &lt;- renderPrint({heightpredict(input$height,input$height2)})
+  }
+)  
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
@@ -76,14 +122,26 @@
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title='Read-And-Delete'>
+        data-slide=1 title='A Child Height Predictor?'>
          1
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='Slide 2'>
+        data-slide=2 title='The Model Basis'>
          2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Ease of Use'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='ui.R code'>
+         4
       </a>
     </li>
   </ul>
@@ -96,7 +154,21 @@
 </body>
   <!-- Load Javascripts for Widgets -->
   
-  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
   <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
   <!-- DONE LOADING HIGHLIGHTER JS FILES -->
